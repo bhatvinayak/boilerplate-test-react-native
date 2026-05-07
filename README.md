@@ -39,7 +39,7 @@ A production-ready React Native boilerplate configured with:
 ## Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/bhatvinayak/boilerplate-test-react-native.git
 ```
 
 ---
