@@ -1,362 +1,94 @@
-# React Native Testing Boilerplate
+# React Native Boilerplate - Feature Branches
 
-A production-ready React Native boilerplate configured with:
+This repository contains multiple production-ready React Native boilerplates, each focused on a specific architectural goal. Switch branches to see the different implementations.
 
-- Unit Testing using Jest + React Native Testing Library
-- End-to-End (E2E) Testing using Detox
-- TypeScript support
-- Scalable testing setup
-- iOS + Android support
+## 🚀 Branches in this Repo
 
----
-
-# Tech Stack
-
-| Purpose           | Library                      |
-| ----------------- | ---------------------------- |
-| Unit Testing      | Jest                         |
-| Component Testing | React Native Testing Library |
-| E2E Testing       | Detox                        |
-| Language          | TypeScript                   |
-| Mobile Framework  | React Native                 |
+| Branch | Focus | Key Features |
+| :--- | :--- | :--- |
+| **`main` / `testing`** | **Robust Testing** | Jest, React Native Testing Library, Detox E2E, LoginForm example. |
+| **`offline`** (Current) | **Offline-First** | Manual sync engine, NetInfo, AsyncStorage, Connectivity Truth-Check, AppState recovery. |
 
 ---
 
-# Features
+# 📱 Offline-First Boilerplate (`offline` branch)
 
-- Jest setup configured
-- Detox setup configured
-- TypeScript support for tests
-- Example login form component
-- Example unit tests
-- Example Detox E2E tests
-- iOS + Android automation support
+This branch provides a robust, manual implementation of an offline-first architecture without heavy third-party state managers.
+
+### Key Offline Features
+- **Connectivity Truth-Check:** Uses a custom ping (`google.com`) to override unreliable native connectivity indicators.
+- **Lifecycle Recovery:** Automatically refreshes connection status when the app returns from the background to the **foreground**.
+- **Manual Sync Engine:** Implements a pending action queue using `AsyncStorage` to process offline actions.
+- **Optimistic UI:** UI updates immediately with "Pending" badges for offline actions.
+- **Exponential Backoff Polling:** Automatically retries connection checks every $2^n$ seconds while offline.
+
+### Tech Stack
+- **Persistence:** `@react-native-async-storage/async-storage`
+- **Connectivity:** `@react-native-community/netinfo` + Custom Ping Logic
+- **Testing:** Jest & Detox
+- **Language:** TypeScript
 
 ---
 
-# Installation
+# 🛠️ Installation & Setup
 
-## Clone Repository
-
+### 1. Clone & Install
 ```bash
 git clone https://github.com/bhatvinayak/boilerplate-test-react-native.git
-```
-
----
-
-## Install Dependencies
-
-```bash
+cd boilerplate-test-react-native
 npm install
 ```
 
----
-
-# Unit Testing Setup
-
-This project uses:
-
-- Jest
-- React Native Testing Library
+### 2. Native Dependencies
+```bash
+# iOS
+cd ios && pod install && cd ..
+```
 
 ---
 
-# Run Unit Tests
+# 🏃 Running the App
 
-## Run Tests
+### Start Metro
+```bash
+npm start
+```
 
+### Run on iOS
+```bash
+npm run ios
+```
+
+### Run on Android
+```bash
+npm run android
+```
+
+---
+
+# 🧪 Testing
+
+### Unit & Component Tests
 ```bash
 npm test
 ```
 
----
-
-## Watch Mode
-
+### E2E Tests (Detox)
 ```bash
-npm test -- --watch
+# Build
+npm run e2e:build:ios # or android
+
+# Test
+npm run e2e:test:ios # or android
 ```
 
 ---
 
-## Coverage
+# 📖 Architecture Documentation
 
-```bash
-npm test -- --coverage
-```
-
----
-
-# Example Unit Test
-
-```tsx
-it('renders correctly', () => {
-  const { getByTestId } = render(<LoginForm />);
-
-  expect(getByTestId('login-screen')).toBeTruthy();
-});
-```
-
----
-
-# E2E Testing Setup
-
-This project uses Detox for end-to-end testing.
-
----
-
-# Prerequisites
-
-## iOS
-
-Install:
-
-- Xcode
-- CocoaPods
-
-Install applesimutils:
-
-```bash
-brew tap wix/brew
-brew install applesimutils
-```
-
----
-
-## Android
-
-Install:
-
-- Android Studio
-- Android Emulator
-
----
-
-# Run E2E Tests
-
----
-
-## Start Emulator / Simulator
-
-### iOS
-
-```bash
-open -a Simulator
-```
-
----
-
-### Android
-
-```bash
-emulator -avd Pixel_8_API_34
-```
-
----
-
-# Build Detox App
-
-## iOS
-
-```bash
-npm run e2e:build:ios
-```
-
----
-
-## Android
-
-```bash
-npm run e2e:build:android
-```
-
----
-
-# Run Detox Tests
-
-## iOS
-
-```bash
-npm run e2e:test:ios
-```
-
----
-
-## Android
-
-```bash
-npm run e2e:test:android
-```
-
----
-
-# Sample E2E Test
-
-```ts
-await element(by.id('email-input')).typeText('test@test.com');
-
-await element(by.id('password-input')).replaceText('123456');
-
-await element(by.id('login-button')).tap();
-
-await expect(element(by.id('success-text'))).toHaveText('Login Successful');
-```
-
----
-
-# Recommended Testing Strategy
-
-## Unit Tests
-
-Test:
-
-- business logic
-- hooks
-- reducers
-- validation
-- utilities
-- component behavior
-
-Avoid over-testing implementation details.
-
----
-
-## E2E Tests
-
-Test only critical flows:
-
-- onboarding
-- login
-- signup
-- payments
-- navigation
-- offline handling
-
-Keep E2E suite small and stable.
-
----
-
-# Important Detox Notes
-
-## iOS Password Autofill Issues
-
-Disable autofill for stable E2E tests:
-
-```tsx
-<TextInput
-  textContentType="none"
-  autoComplete="off"
-  importantForAutofill="no"
-/>
-```
-
----
-
-## Prefer replaceText()
-
-Use:
-
-```ts
-replaceText();
-```
-
-instead of:
-
-```ts
-typeText();
-```
-
-for better Detox stability.
-
----
-
-# Useful Commands
-
-## Run Single E2E File
-
-```bash
-detox test e2e/login.e2e.ts -c ios.sim.debug
-```
-
----
-
-## Verbose Logs
-
-```bash
-detox test -c ios.sim.debug --loglevel verbose
-```
-
----
-
-## Disable Android Animations
-
-```bash
-adb shell settings put global window_animation_scale 0
-adb shell settings put global transition_animation_scale 0
-adb shell settings put global animator_duration_scale 0
-```
-
----
-
-# Recommended Folder Convention
-
-## Unit Tests
-
-Colocate tests beside components:
-
-```txt
-Component.tsx
-Component.test.tsx
-```
-
----
-
-## E2E Tests
-
-Keep E2E tests outside `src/`:
-
-```txt
-e2e/
-```
-
----
-
-# CI/CD Recommendation
-
-## Pull Requests
-
-Run:
-
-- lint
-- typecheck
-- unit tests
-
----
-
-## Release / Nightly Builds
-
-Run:
-
-- Detox E2E tests
-
-This keeps CI fast and scalable.
-
----
-
-# Future Improvements
-
-Possible additions:
-
-- GitHub Actions CI
-- Firebase Test Lab
-- Maestro support
-- Mock Service Worker (MSW)
-- Code coverage reporting
-- Snapshot testing
-- Visual regression testing
+For a deep dive into the internal conventions, hooks, and services used in this branch, please refer to the [GEMINI.md](./GEMINI.md) file.
 
 ---
 
 # License
-
 MIT
